@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, viewport-fit=cover'>
+    <title>Ответственность.exe</title>
+    <meta name='theme-color' content='#09090B'>
+    <meta name='description' content='Официальная система делегирования ответственности'>
+    <link rel='manifest' href='manifest.json'>
+    <link rel='icon' href='assets/icons/favicon.png'>
+    <link rel='apple-touch-icon' href='assets/icons/icon-192.png'>
+    <link rel='preconnect' href='https://fonts.googleapis.com'>
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
+    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap' rel='stylesheet'>
+    <link rel='stylesheet' href='css/style.css'>
+</head>
+<body>
+    <div id='loader' class='loader-screen'>
+        <div class='loader-content'>
+            <div class='loader-logo'>Ответственность.exe</div>
+            <div id='loader-text' class='loader-text'>Инициализация...</div>
+            <div class='loader-progress'>
+                <div class='loader-bar'></div>
+            </div>
+        </div>
+    </div>
+
+    <div id='welcome-screen' class='welcome-screen hidden' aria-modal='true' role='dialog'>
+        <div class='welcome-card'>
+            <h2>Ответственность.exe</h2>
+            <div class='welcome-version'>v1.0</div>
+            <p>Настоящим подтверждается,<br><br>что вся ответственность<br>может быть официально<br>делегирована приложению.</p>
+            <div id='welcome-fact' class='welcome-fact'></div>
+            <button id='close-welcome' type='button'>Делегировать официально</button>
+        </div>
+    </div>
+
+    <main id='main-screen' class='hidden'>
+        <header>
+            <h1>Ответственность.exe</h1>
+            <p>Официальная система<br>делегирования ответственности</p>
+        </header>
+
+        <section class='oracle-container' aria-label='Магический шар'>
+            <div id='oracle-ball' class='oracle-ball'>
+                <div class='ball-glow'></div>
+                <img id="ball-image" src="assets/ball.webp" alt="Магический шар" draggable="false">
+                <div class='ball-fog'></div>
+            </div>
+        </section>
+
+        <div id='status' class='status' aria-live='polite'>Готов к делегированию ответственности.</div>
+        <div id='answer' class='answer hidden' aria-live='assertive'></div>
+        <div id='result-caption' class='result-caption hidden'></div>
+
+        <button id='decision-button' class='decision-button' type='button'>Переложить ответственность</button>
+
+        <div id='counter' class='counter'>Ответственность успешно переложена: 0</div>
+        <div id='changing-caption' class='changing-caption'>Алгоритм сделал всё возможное.</div>
+
+        <footer>
+            <div id='footer-quote' class='footer-quote'>Случайность — тоже позиция.</div>
+            <div class='copyright'>© Ответственность.exe • Все совпадения с реальностью абсолютно случайны</div>
+            <div id="disclaimer" class="disclaimer"></div>
+            <button id='about-button' class='about-button' type='button'>v1.0</button>
+        </footer>
+    </main>
+
+    <div id='about-modal' class='modal hidden' aria-modal='true' role='dialog'>
+        <div class='modal-card'>
+            <h2>Ответственность.exe</h2>
+            <div class='welcome-version'>v1.0</div>
+            <p>Создано специально<br>для тех,<br>кто устал принимать решения <b>сам</b>.</p>
+            <div class='about-year'>© 2026</div>
+            <div class='about-small'>Все решения приняты генератором случайных событий. Любые совпадения с реальностью случайны.</div>
+            <div class='about-small'>Если что — это была идея приложения.</div>
+            <button id='close-about' type='button'>Закрыть</button>
+        </div>
+    </div>
+
+    <audio id='whoosh-sound' preload='auto'>
+        <source src='sounds/whoosh.mp3' type='audio/mpeg'>
+    </audio>
+
+    <script src='js/data.js'></script>
+    <script src='js/storage.js'></script>
+    <script src='js/app.js'></script>
+</body>
+</html>
