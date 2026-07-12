@@ -67,7 +67,7 @@ main{
 }
 
 .loader-content{width:min(90%,360px);text-align:center;}
-.loader-logo{font-size:34px;font-weight:800;letter-spacing:.3px;}
+.loader-logo{font-size:clamp(26px,7vw,34px);font-weight:800;letter-spacing:.3px;text-align:center;line-height:1.15;padding:0 12px;}
 .loader-text{margin-top:26px;color:var(--muted);font-size:14px;min-height:22px;line-height:1.55;}
 .loader-progress{margin-top:30px;height:6px;background:#1A1A20;border-radius:999px;overflow:hidden;}
 .loader-bar{width:35%;height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:999px;animation:loaderMove 1.3s linear infinite;}
