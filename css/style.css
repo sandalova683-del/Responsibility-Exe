@@ -131,7 +131,7 @@ header{width:100%;text-align:center;margin-top:8px;}
 header h1{font-size:34px;font-weight:800;letter-spacing:.2px;}
 header p{margin-top:10px;color:var(--muted);font-size:15px;line-height:1.55;}
 
-.oracle-container{width:100%;flex:1;display:flex;justify-content:center;align-items:center;margin-top:28px;margin-bottom:8px;}
+.oracle-container{width:100%;flex:1;display:flex;justify-content:center;align-items:center;margin-top:20px;margin-bottom:0px;}
 
 .oracle-ball{
     position:relative;
@@ -157,7 +157,7 @@ header p{margin-top:10px;color:var(--muted);font-size:15px;line-height:1.55;}
 .oracle-ball.gold{filter:drop-shadow(0 0 34px rgba(245,196,81,.75));animation:ballBreath 4.5s ease-in-out infinite,goldPulse 1.6s ease-in-out infinite;}
 .oracle-ball.gold .ball-glow{background:radial-gradient(circle,rgba(245,196,81,.45),rgba(255,235,170,.2) 45%,transparent 75%);}
 
-.status{width:100%;max-width:420px;min-height:44px;margin-top:26px;margin-bottom:14px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.55;color:var(--cyan);opacity:.92;}
+.status{width:100%;max-width:420px;min-height:40px;margin-top:10px;margin-bottom:10px;text-align:center;font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.55;color:var(--cyan);opacity:.92;}
 .answer{min-height:56px;display:flex;justify-content:center;align-items:center;text-align:center;font-size:42px;font-weight:800;letter-spacing:.6px;animation:answerAppear .35s ease;}
 .answer.yes{color:var(--green);}
 .answer.no{color:var(--red);}
