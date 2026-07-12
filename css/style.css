@@ -67,16 +67,7 @@ main{
 }
 
 .loader-content{width:min(90%,360px);text-align:center;}
-.loader-logo{
-    font-size:clamp(22px,5.8vw,32px);
-    font-weight:800;
-    letter-spacing:0;
-    line-height:1.1;
-    text-align:center;
-    white-space:normal;
-    overflow-wrap:anywhere;
-    margin-bottom:18px;
-}
+.loader-logo{font-size:24px;}
 .loader-text{margin-top:26px;color:var(--muted);font-size:14px;min-height:22px;line-height:1.55;}
 .loader-progress{margin-top:30px;height:6px;background:#1A1A20;border-radius:999px;overflow:hidden;}
 .loader-bar{width:35%;height:100%;background:linear-gradient(90deg,var(--purple),var(--cyan));border-radius:999px;animation:loaderMove 1.3s linear infinite;}
