@@ -102,7 +102,13 @@ main{
 }
 
 .modal-card{border-radius:26px;animation:popup .28s ease;}
-.welcome-card h2,.modal-card h2{font-size:32px;font-weight:800;}
+.welcome-card h2,.modal-card h2{
+    font-size:26px;
+    font-weight:800;
+    line-height:1.15;
+    overflow-wrap:anywhere;
+    word-break:break-word;
+}
 .welcome-version{margin-top:8px;color:var(--muted);font-size:13px;letter-spacing:.5px;}
 .welcome-card p,.modal-card p{margin:26px 0;line-height:1.85;color:#E3E3E8;}
 .welcome-fact{margin:0 0 24px;color:var(--cyan);font-family:'JetBrains Mono',monospace;font-size:13px;line-height:1.55;}
