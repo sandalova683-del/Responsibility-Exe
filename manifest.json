@@ -2,17 +2,19 @@
   "name": "Ответственность.exe",
   "short_name": "Ответственность",
   "description": "Официальная система делегирования ответственности",
-  "id": "./index.html",
-  "start_url": "./index.html",
-  "scope": "./",
+
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+
   "display": "standalone",
   "orientation": "portrait",
+
   "background_color": "#09090B",
   "theme_color": "#09090B",
+
   "lang": "ru",
-  "categories": [
-    "entertainment"
-  ],
+
   "icons": [
     {
       "src": "assets/icons/icon-192.png",
