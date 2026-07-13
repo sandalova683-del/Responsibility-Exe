@@ -43,9 +43,9 @@ const memory = {
 };
 
 const BALL_IMAGES = {
-    default: 'assets/ball.webp',
-    thinking: 'assets/ball-thinking.webp',
-    gold: 'assets/ball-gold.webp'
+    default: 'assets/ball.png',
+    thinking: 'assets/ball-thinking.png',
+    gold: 'assets/ball-gold.png'
 };
 
 window.addEventListener('load', startApp);
@@ -246,14 +246,15 @@ function showAnswer(){
     resultCaption.textContent = getResultCaption(result);
     resultCaption.classList.remove('hidden');
 
+    appData.lastAnswer = result;
+    appData.count += 1;
+
     status.textContent = getStatusAfterAnswer(result);
     counter.textContent = getCounterText();
     changingCaption.textContent = getRandomCaption();
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
 
-    appData.lastAnswer = result;
-    appData.count += 1;
     saveData(appData);
 
     isThinking = false;

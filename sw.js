@@ -5,7 +5,7 @@
    © 2026
 ===================================================== */
 
-const CACHE_NAME = 'responsibility-exe-v1.0.1';
+const CACHE_NAME = 'responsibility-exe-v1.0.2';
 
 const FILES_TO_CACHE = [
     './',
@@ -15,9 +15,9 @@ const FILES_TO_CACHE = [
     './js/data.js',
     './js/storage.js',
     './js/app.js',
-    './assets/ball.webp',
-    './assets/ball-thinking.webp',
-    './assets/ball-gold.webp',
+    './assets/ball.png',
+    './assets/ball-thinking.png',
+    './assets/ball-gold.png',
     './assets/icons/favicon.png',
     './assets/icons/icon-192.png',
     './assets/icons/icon-512.png',
