@@ -84,7 +84,7 @@ function startLoader(){
         loader.classList.add('hidden');
         mainScreen.classList.remove('hidden');
         initializeApp();
-    }, 2200);
+    }, 900);
 }
 
 function setBallImage(type = 'default'){
