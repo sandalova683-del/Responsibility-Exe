@@ -24,14 +24,14 @@ const loadingMessages = [
 ];
 
 const messageChances = {
-    normal: 0.45,
+    normal: 0.5,
     personal: 0.40,
-    ultraRare: 0.05,
-    ultraRarePersonal: 0.1
+    ultraRare: 0.07,
+    ultraRarePersonal: 0.03
 };
 
 const captionChances = {
-    personal: 0.50
+    personal: 0.30
 };
 
 const thinkingMessages = [
@@ -332,7 +332,6 @@ const veraMessages = [
     'Золотой режим активирован. Нужно написать Вере.',
     'Вселенная передала дело Вере.',
     'Шар отказывается решать без Веры.',
-    'Редкий протокол: НАПИШИ ВЕРЕ.',
     'Ответ найден за пределами обычной логики. Напиши Вере.',
     'Судьба сказала коротко: Вера.'
 ];
