@@ -48,7 +48,7 @@ const BALL_IMAGES = {
     gold: 'assets/ball-gold.png'
 };
 
-window.addEventListener('load', startApp);
+document.addEventListener('DOMContentLoaded', startApp);
 button.addEventListener('click', makeDecision);
 closeWelcomeButton.addEventListener('click', closeWelcome);
 aboutButton.addEventListener('click', openAbout);
@@ -96,6 +96,7 @@ function setBallImage(type = 'default'){
 }
 
 function initializeApp(){
+    setBallImage();
     counter.textContent = getCounterText();
     changingCaption.textContent = getRandomCaption();
     footerQuote.textContent = getRandomFooterQuote();
