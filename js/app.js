@@ -53,7 +53,7 @@ const BALL_IMAGES = {
     gold: 'assets/ball-gold.png'
 };
 
-window.onload = startApp;
+document.addEventListener("DOMContentLoaded", startApp);
 button.addEventListener('click', makeDecision);
 closeWelcomeButton.addEventListener('click', closeWelcome);
 aboutButton.addEventListener('click', () => {
@@ -137,7 +137,7 @@ document.addEventListener('keydown', event => {
 
 function startApp(){
     startLoader();
-    registerServiceWorker();
+    setTimeout(registerServiceWorker,3000);
 }
 
 function startLoader(){
@@ -154,7 +154,7 @@ function startLoader(){
         loader.classList.add('hidden');
         mainScreen.classList.remove('hidden');
         initializeApp();
-    }, 2200);
+    }, 900);
 }
 
 function setBallImage(type = 'default'){
