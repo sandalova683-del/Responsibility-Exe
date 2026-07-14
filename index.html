@@ -13,11 +13,9 @@
     <link rel='manifest' href='manifest.json'>
     <link rel='icon' href='assets/icons/favicon.png'>
     <link rel='apple-touch-icon' href='assets/icons/icon-192.png'>
- <!--
     <link rel='preconnect' href='https://fonts.googleapis.com'>
     <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
     <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap' rel='stylesheet'>
- -->
     <link rel='stylesheet' href='css/style.css'>
 </head>
 <body>
@@ -83,6 +81,31 @@
             <button id='close-about' type='button'>Закрыть</button>
         </div>
     </div>
+
+    <div id="developer-modal" class="developer-modal hidden">
+    <div class="developer-window">
+        <div class="developer-header">
+            Ответственность.exe Developer Console
+        </div>
+        <div class="developer-body">
+            <button class="developer-item" data-action="reset">
+                [1] Сбросить данные
+            </button>
+            <button class="developer-item" data-action="cache">
+                [2] Очистить кэш
+            </button>
+            <button class="developer-item" data-action="info">
+                [3] Диагностика
+            </button>
+            <button class="developer-item" data-action="vera">
+                [4] Тест "ВЕРА"
+            </button>
+            <button class="developer-item" data-action="close">
+                [5] Закрыть
+            </button>
+        </div>
+    </div>
+</div>
 
     <audio id='whoosh-sound' preload='auto'>
         <source src='sounds/whoosh.mp3' type='audio/mpeg'>

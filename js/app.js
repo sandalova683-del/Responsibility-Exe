@@ -25,6 +25,8 @@ const aboutButton = document.getElementById('about-button');
 const aboutModal = document.getElementById('about-modal');
 const closeAboutButton = document.getElementById('close-about');
 const whooshSound = document.getElementById('whoosh-sound');
+const developerModal = document.getElementById('developer-modal');
+const developerItems = document.querySelectorAll('.developer-item');
 
 let appData = loadData();
 let isThinking = false;
@@ -42,6 +44,9 @@ const memory = {
     streak: null
 };
 
+let developerTapCount = 0;
+let developerTimer = null;
+
 const BALL_IMAGES = {
     default: 'assets/ball.png',
     thinking: 'assets/ball-thinking.png',
@@ -51,17 +56,82 @@ const BALL_IMAGES = {
 window.onload = startApp;
 button.addEventListener('click', makeDecision);
 closeWelcomeButton.addEventListener('click', closeWelcome);
-aboutButton.addEventListener('click', openAbout);
+aboutButton.addEventListener('click', () => {
+    developerTapCount++;
+    clearTimeout(developerTimer);
+    developerTimer = setTimeout(() => {
+        developerTapCount = 0;
+    }, 1200);
+    if (developerTapCount >= 5) {
+        developerTapCount = 0;
+        openDeveloper();
+        return;
+    }
+    if (developerTapCount === 1) {
+        setTimeout(() => {
+            if (developerTapCount === 1) {
+                developerTapCount = 0;
+                openAbout();
+            }
+        }, 350);
+    }
+});
+
 closeAboutButton.addEventListener('click', closeAbout);
+developerItems.forEach(item => {
+    item.addEventListener('click', () => {
+        switch(item.dataset.action){
+            case 'reset':
+                if(confirm('Удалить все данные приложения?')){
+                    localStorage.clear();
+                    location.reload();
+                }
+                break;
+            case 'cache':
+                if('caches' in window){
+                    caches.keys().then(keys => {
+                        keys.forEach(key => caches.delete(key));
+                        alert('Кэш очищён.');
+                    });
+                }
+                break;
+            case 'info':
+                alert(
+`Ответственность.exe v1.0
+Ответов: ${appData.count}
+ДА: ${appData.stats.yes}
+НЕТ: ${appData.stats.no}
+ВЕРА: ${appData.stats.vera}`
+                );
+                break;
+            case 'vera':
+                closeDeveloper();
+                answer.textContent = "НАПИШИ ВЕРЕ";
+                answer.className = "answer gold";
+                answer.classList.remove("hidden");
+                break;
+            case 'close':
+                closeDeveloper();
+                break;
+        }
+    });
+});
 aboutModal.addEventListener('click', event => {
     if(event.target === aboutModal){
         closeAbout();
     }
 });
 
+developerModal.addEventListener('click', event => {
+    if(event.target === developerModal){
+        closeDeveloper();
+    }
+});
+
 document.addEventListener('keydown', event => {
     if(event.key === 'Escape'){
         closeAbout();
+        closeDeveloper();
     }
 });
 
@@ -381,4 +451,12 @@ function registerServiceWorker(){
             console.warn('Service Worker не зарегистрирован', error);
         });
     }
+}
+
+function openDeveloper(){
+    developerModal.classList.remove('hidden');
+}
+
+function closeDeveloper(){
+    developerModal.classList.add('hidden');
 }
