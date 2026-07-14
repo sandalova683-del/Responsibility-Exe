@@ -48,7 +48,7 @@ const BALL_IMAGES = {
     gold: 'assets/ball-gold.png'
 };
 
-document.addEventListener('DOMContentLoaded', startApp);
+window.onload = startApp;
 button.addEventListener('click', makeDecision);
 closeWelcomeButton.addEventListener('click', closeWelcome);
 aboutButton.addEventListener('click', openAbout);
