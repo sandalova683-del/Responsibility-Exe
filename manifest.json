@@ -3,9 +3,9 @@
   "short_name": "Ответственность",
   "description": "Официальная система делегирования ответственности",
 
-  "id": "/",
-  "start_url": "/",
-  "scope": "/",
+  "id": "/Responsibility-Exe/",
+  "start_url": "/Responsibility-Exe/",
+  "scope": "/Responsibility-Exe/",
 
   "display": "standalone",
   "orientation": "portrait",
