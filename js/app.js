@@ -4,7 +4,7 @@
    app.js
    © 2026
 ===================================================== */
-
+const VERA_CHANCE = 0.08;
 const loader = document.getElementById('loader');
 const loaderText = document.getElementById('loader-text');
 const mainScreen = document.getElementById('main-screen');
@@ -31,6 +31,12 @@ const developerInput = document.getElementById('developer-input');
 
 let appData = loadData();
 let isThinking = false;
+
+const THINKING_CONFIG = {
+    fast: { chance: 0.20, duration: 4800 },
+    medium: { chance: 0.80, duration: 5700 },
+    slow: { duration: 6800 }
+};
 
 const memory = {
     thinking: null,
@@ -112,6 +118,7 @@ developerInput.addEventListener("keydown", event => {
 help
 version
 stats
+history
 reset
 cache
 vera
@@ -141,9 +148,25 @@ Version 1.0
 
 > `;
             break;
+        case "history":
+            const history = appData.history || [];
+            if(history.length === 0){
+                developerOutput.textContent += `\nИстория пуста.\n\n> `;
+            } else {
+                const last10 = history.slice(-10).reverse();
+                let output = '\nПоследние 10 решений:\n\n';
+                last10.forEach((item, index) => {
+                    const label = item.answer === 'yes' ? 'ДА' : (item.answer === 'no' ? 'НЕТ' : 'ВЕРА');
+                    const time = new Date(item.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+                    output += `  ${index+1}. ${label}  (${time})\n`;
+                });
+                output += `\n> `;
+                developerOutput.textContent += output;
+            }
+            break;
         case "reset":
             if(confirm("Удалить данные?")){
-                localStorage.clear();
+                localStorage.removeItem(STORAGE_KEY); 
                 location.reload();
             }
             developerOutput.textContent += "\n> ";
@@ -220,11 +243,22 @@ function setBallImage(type = 'default'){
 
 function initializeApp(){
     setBallImage();
-    counter.textContent = getCounterText();
+    // Устанавливаем data-атрибуты для анимации
+    counter.dataset.counterTo = appData.count;
+    counter.dataset.counterFrom = 0;
+    counter.dataset.counterDuration = 1200;
+    counter.dataset.counterDecimals = 0;
+    // Запускаем анимацию через AppEffects (если доступен)
+    if(window.AppEffects && typeof AppEffects.animateCounter === 'function'){
+        AppEffects.animateCounter(counter);
+    } else {
+        counter.textContent = getCounterText();
+    }
     changingCaption.textContent = getRandomCaption();
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
     checkFirstLaunch();
+    updateStatsDisplay();
 }
 
 function checkFirstLaunch(){
@@ -234,6 +268,10 @@ function checkFirstLaunch(){
 
     welcomeFact.textContent = getUniqueRandom(welcomeFacts, 'welcome');
     welcomeScreen.classList.remove('hidden');
+    // Принудительно перезапускаем анимацию, если окно уже было показано
+    welcomeScreen.style.animation = 'none';
+    welcomeScreen.offsetHeight; // триггер перерисовки
+    welcomeScreen.style.animation = '';
 }
 
 function closeWelcome(){
@@ -297,15 +335,15 @@ function makeDecision(){
 function getThinkingTime(){
     const random = Math.random();
 
-    if(random < 0.20){
-        return 4800;
+    if(random < THINKING_CONFIG.fast.chance){
+        return THINKING_CONFIG.fast.duration;
     }
 
-    if(random < 0.80){
-        return 5700;
+    if(random < THINKING_CONFIG.medium.chance){
+        return THINKING_CONFIG.medium.duration;
     }
 
-    return 6800;
+    return THINKING_CONFIG.slow.duration;
 }
 
 function think(duration){
@@ -347,7 +385,7 @@ function showAnswer(){
     const result = getRandomAnswer();
     const isVera = result === 'vera';
     const visualClass = isVera ? 'gold' : result;
-    const answerText = isVera ? 'НАПИШИ ВЕРЕ' : result.toUpperCase();
+    const answerText = isVera ? 'НАПИШИ ВЕРЕ' : (result === 'yes' ? 'ДА' : 'НЕТ');
 
     updateStats(result);
     updateStreak(result);
@@ -373,13 +411,30 @@ function showAnswer(){
     appData.lastAnswer = result;
     appData.count += 1;
 
+    // Сохраняем историю (максимум 50 записей)
+    appData.history.push({
+        answer: result,
+        timestamp: new Date().toISOString()
+    });
+    if(appData.history.length > 50){
+        appData.history.shift();
+    }
+
     status.textContent = getStatusAfterAnswer(result);
-    counter.textContent = getCounterText();
+    // Обновляем счётчик с анимацией
+    counter.dataset.counterTo = appData.count;
+    if(window.AppEffects && typeof AppEffects.animateCounter === 'function'){
+        AppEffects.animateCounter(counter);
+    } else {
+        counter.textContent = getCounterText();
+    }
     changingCaption.textContent = getRandomCaption();
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
 
     saveData(appData);
+
+    updateStatsDisplay();
 
     isThinking = false;
     button.disabled = false;
@@ -390,9 +445,7 @@ function showAnswer(){
 }
 
 function getRandomAnswer(){
-    const veraChance = 0.08;
-
-    if(Math.random() < veraChance){
+    if(Math.random() < VERA_CHANCE){
         return 'vera';
     }
 
@@ -506,6 +559,24 @@ function registerServiceWorker(){
     }
 }
 
+function updateStatsDisplay(){
+    const container = document.getElementById('stats-container');
+    const yesEl = document.getElementById('stats-yes');
+    const noEl = document.getElementById('stats-no');
+    const veraEl = document.getElementById('stats-vera');
+
+    if(!container || !yesEl || !noEl || !veraEl) return;
+
+    yesEl.textContent = appData.stats.yes || 0;
+    noEl.textContent = appData.stats.no || 0;
+    veraEl.textContent = appData.stats.vera || 0;
+
+    // Показываем только если есть хоть один ответ
+    if(appData.count > 0){
+        container.classList.remove('hidden');
+    }
+}
+
 function openDeveloper(){
     developerModal.classList.remove('hidden');
     developerOutput.textContent =
@@ -524,3 +595,4 @@ function closeDeveloper(){
     developerModal.classList.add("hidden");
     developerInput.blur();
 }
+

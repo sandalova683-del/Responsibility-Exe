@@ -80,8 +80,7 @@ function saveData(data){
 function resetData(){
     try{
         localStorage.removeItem(STORAGE_KEY);
-    }
-    catch(error){
+    } catch(error){
         console.warn('Ошибка сброса LocalStorage', error);
     }
 }

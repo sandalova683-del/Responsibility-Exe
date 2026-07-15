@@ -4,8 +4,8 @@
   "description": "Официальная система делегирования ответственности",
 
   "id": "/Responsibility-Exe/",
-  "start_url": "/Responsibility-Exe/",
-  "scope": "/Responsibility-Exe/",
+  "start_url": "./",
+  "scope": "./",
 
   "display": "standalone",
   "orientation": "portrait",

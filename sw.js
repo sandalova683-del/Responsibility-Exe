@@ -8,7 +8,6 @@
 const CACHE_NAME = 'responsibility-exe-v1.0.2';
 
 const FILES_TO_CACHE = [
-    './',
     './index.html',
     './manifest.json',
     './css/style.css',

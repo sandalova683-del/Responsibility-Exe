@@ -285,7 +285,8 @@
   window.AppEffects = {
     init,
     destroy,
-    revealNow: () => qsAll(SELECTORS.reveal).forEach((element) => element.classList.add('is-visible'))
+    revealNow: () => qsAll(SELECTORS.reveal).forEach((element) => element.classList.add('is-visible')),
+    animateCounter
   };
 
   if (document.readyState === 'loading') {
