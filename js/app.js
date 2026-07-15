@@ -26,7 +26,8 @@ const aboutModal = document.getElementById('about-modal');
 const closeAboutButton = document.getElementById('close-about');
 const whooshSound = document.getElementById('whoosh-sound');
 const developerModal = document.getElementById('developer-modal');
-const developerItems = document.querySelectorAll('.developer-item');
+const developerOutput = document.getElementById('developer-output');
+const developerInput = document.getElementById('developer-input');
 
 let appData = loadData();
 let isThinking = false;
@@ -78,44 +79,7 @@ aboutButton.addEventListener('click', () => {
 });
 
 closeAboutButton.addEventListener('click', closeAbout);
-developerItems.forEach(item => {
-    item.addEventListener('click', () => {
-        switch(item.dataset.action){
-            case 'reset':
-                if(confirm('Удалить все данные приложения?')){
-                    localStorage.clear();
-                    location.reload();
-                }
-                break;
-            case 'cache':
-                if('caches' in window){
-                    caches.keys().then(keys => {
-                        keys.forEach(key => caches.delete(key));
-                        alert('Кэш очищён.');
-                    });
-                }
-                break;
-            case 'info':
-                alert(
-`Ответственность.exe v1.0
-Ответов: ${appData.count}
-ДА: ${appData.stats.yes}
-НЕТ: ${appData.stats.no}
-ВЕРА: ${appData.stats.vera}`
-                );
-                break;
-            case 'vera':
-                closeDeveloper();
-                answer.textContent = "НАПИШИ ВЕРЕ";
-                answer.className = "answer gold";
-                answer.classList.remove("hidden");
-                break;
-            case 'close':
-                closeDeveloper();
-                break;
-        }
-    });
-});
+
 aboutModal.addEventListener('click', event => {
     if(event.target === aboutModal){
         closeAbout();
@@ -133,6 +97,95 @@ document.addEventListener('keydown', event => {
         closeAbout();
         closeDeveloper();
     }
+});
+
+developerInput.addEventListener("keydown", event => {
+    if(event.key !== "Enter") return;
+    const command = developerInput.value.trim().toLowerCase();
+    developerOutput.textContent += command + "\n";
+    switch(command){
+        case "help":
+            developerOutput.textContent +=
+`
+Доступные команды
+
+help
+version
+stats
+reset
+cache
+vera
+clear
+exit
+
+> `;
+            break;
+        case "version":
+            developerOutput.textContent +=
+`
+Ответственность.exe
+Version 1.0
+
+> `;
+            break;
+        case "stats":
+            developerOutput.textContent +=
+`
+Ответов: ${appData.count}
+
+ДА: ${appData.stats.yes}
+
+НЕТ: ${appData.stats.no}
+
+ВЕРА: ${appData.stats.vera}
+
+> `;
+            break;
+        case "reset":
+            if(confirm("Удалить данные?")){
+                localStorage.clear();
+                location.reload();
+            }
+            developerOutput.textContent += "\n> ";
+            break;
+        case "cache":
+            if("caches" in window){
+                caches.keys().then(keys=>{
+                    keys.forEach(key=>caches.delete(key));
+                    developerOutput.textContent +=
+`
+Кэш очищён.
+
+> `;
+                });
+            }
+            break;
+        case "vera":
+            closeDeveloper();
+            answer.textContent = "НАПИШИ ВЕРЕ";
+            answer.className = "answer gold";
+            answer.classList.remove("hidden");
+            break;
+        case "clear":
+            developerOutput.textContent =
+`Ответственность.exe Developer Console
+
+> `;
+            break;
+        case "exit":
+            closeDeveloper();
+            break;
+        default:
+            developerOutput.textContent +=
+`
+Неизвестная команда.
+
+Введите help
+
+> `;
+    }
+    developerOutput.scrollTop = developerOutput.scrollHeight;
+    developerInput.value="";
 });
 
 function startApp(){
@@ -455,8 +508,19 @@ function registerServiceWorker(){
 
 function openDeveloper(){
     developerModal.classList.remove('hidden');
+    developerOutput.textContent =
+`Ответственность.exe Developer Console v1.0
+
+Введите команду.
+
+help - список команд
+
+> `;
+    developerInput.value = "";
+    developerInput.focus();
 }
 
 function closeDeveloper(){
-    developerModal.classList.add('hidden');
+    developerModal.classList.add("hidden");
+    developerInput.blur();
 }
