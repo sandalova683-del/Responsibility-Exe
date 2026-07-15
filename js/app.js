@@ -571,6 +571,11 @@ function updateStatsDisplay(){
     noEl.textContent = appData.stats.no || 0;
     veraEl.textContent = appData.stats.vera || 0;
 
+    // Добавляем цвета
+    yesEl.className = 'stats-value yes-stats';
+    noEl.className = 'stats-value no-stats';
+    veraEl.className = 'stats-value vera-stats';
+
     // Показываем только если есть хоть один ответ
     if(appData.count > 0){
         container.classList.remove('hidden');
