@@ -258,7 +258,6 @@ function initializeApp(){
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
     checkFirstLaunch();
-    updateStatsDisplay();
 }
 
 function checkFirstLaunch(){
@@ -434,8 +433,6 @@ function showAnswer(){
 
     saveData(appData);
 
-    updateStatsDisplay();
-
     isThinking = false;
     button.disabled = false;
 
@@ -556,29 +553,6 @@ function registerServiceWorker(){
         navigator.serviceWorker.register('sw.js').catch(error => {
             console.warn('Service Worker не зарегистрирован', error);
         });
-    }
-}
-
-function updateStatsDisplay(){
-    const container = document.getElementById('stats-container');
-    const yesEl = document.getElementById('stats-yes');
-    const noEl = document.getElementById('stats-no');
-    const veraEl = document.getElementById('stats-vera');
-
-    if(!container || !yesEl || !noEl || !veraEl) return;
-
-    yesEl.textContent = appData.stats.yes || 0;
-    noEl.textContent = appData.stats.no || 0;
-    veraEl.textContent = appData.stats.vera || 0;
-
-    // Добавляем цвета
-    yesEl.className = 'stats-value yes-stats';
-    noEl.className = 'stats-value no-stats';
-    veraEl.className = 'stats-value vera-stats';
-
-    // Показываем только если есть хоть один ответ
-    if(appData.count > 0){
-        container.classList.remove('hidden');
     }
 }
 
