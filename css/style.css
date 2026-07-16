@@ -348,17 +348,15 @@ footer{width:100%;margin-top:auto;padding-top:10px;padding-bottom:max(14px,env(s
 }
 
 .developer-window{
-    width:min(92%,520px);
-    height:min(80vh,620px);
-    display:flex;
-    flex-direction:column;
-    background:#070707;
-    border:2px solid #3cff7b;
-    border-radius:18px;
-    overflow:hidden;
-    box-shadow:
-        0 0 30px rgba(60,255,123,.18),
-        inset 0 0 20px rgba(60,255,123,.05);
+    width: min(92%, 380px);
+    height: min(55vh, 400px);
+    display: flex;
+    flex-direction: column;
+    background: #070707;
+    border: 2px solid #3cff7b;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(60,255,123,.18), inset 0 0 20px rgba(60,255,123,.05);
 }
 
 .developer-header{
