@@ -665,14 +665,6 @@ footer{width:100%;margin-top:auto;padding-top:10px;padding-bottom:max(14px,env(s
     border-radius: 2px;
 }
 
-.tip-counter {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 24px;
-    letter-spacing: 0.3px;
-}
-
 #close-tip {
     width: 100%;
     padding: 14px;

@@ -40,7 +40,6 @@ const themeButtons = document.querySelectorAll('.theme-btn');
 
 const tipScreen = document.getElementById('tip-screen');
 const dailyTipText = document.getElementById('daily-tip-text');
-const tipCounter = document.getElementById('tip-counter');
 const closeTipButton = document.getElementById('close-tip');
 
 let appData = loadData();
@@ -716,18 +715,7 @@ try {
 // ============================================
 
 function getDailyTip() {
-    const today = new Date().toDateString();
-    const savedTip = localStorage.getItem('daily_tip');
-    const savedDate = localStorage.getItem('daily_tip_date');
-    
-    if (savedDate === today && savedTip) {
-        return savedTip;
-    }
-    
-    const tip = dailyTips[Math.floor(Math.random() * dailyTips.length)];
-    localStorage.setItem('daily_tip', tip);
-    localStorage.setItem('daily_tip_date', today);
-    return tip;
+    return dailyTips[Math.floor(Math.random() * dailyTips.length)];
 }
 
 function showDailyTipScreen() {
@@ -735,19 +723,18 @@ function showDailyTipScreen() {
         return;
     }
 
+    const today = new Date().toDateString();
+    const lastTipDate = localStorage.getItem('tip_last_shown_date');
+
+    if (lastTipDate === today) {
+        return;
+    }
+
+    localStorage.setItem('tip_last_shown_date', today);
+
     const tip = getDailyTip();
     dailyTipText.textContent = tip;
 
-    let launchCount = parseInt(localStorage.getItem('tip_launch_count') || '0');
-    launchCount++;
-    localStorage.setItem('tip_launch_count', String(launchCount));
-
-    let suffix = 'раз';
-    if (launchCount % 10 === 1 && launchCount % 100 !== 11) suffix = 'раз';
-    else if ([2, 3, 4].includes(launchCount % 10) && ![12, 13, 14].includes(launchCount % 100)) suffix = 'раза';
-    tipCounter.textContent = `Запуск №${launchCount} · Ты уже ${launchCount} ${suffix} делегируешь ответственность`;
-
-    // Рандомная надпись на кнопке
     const tipButtonTexts = [
         'Продолжить →', 'Погнали →', 'Вперёд →',
         'Делегировать →', 'Доверяю →', 'Ну, давай →',
