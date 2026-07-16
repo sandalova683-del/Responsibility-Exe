@@ -639,14 +639,7 @@ function registerServiceWorker(){
 
 function openDeveloper(){
     developerModal.classList.remove('hidden');
-    developerOutput.textContent =
-`Ответственность.exe Developer Console v1.0
-
-Введите команду.
-
-help - список команд
-
-> `;
+    developerOutput.textContent = `Введите команду или наберите "help"\n\n> `;
     developerInput.value = "";
     developerInput.focus();
 }
