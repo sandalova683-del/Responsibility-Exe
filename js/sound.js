@@ -1,6 +1,6 @@
 /* =====================================================
    Ответственность.exe - Sound Engine
-   Version: 1.0.1
+   Version: 1.0.2
    © 2026
 ===================================================== */
 
@@ -12,10 +12,11 @@ const SoundEngine = (() => {
     let isInitialized = false;
     let isWarmedUp = false;
     let wakeupInterval = null;
+    let playTimeout = null;
 
     const SOUND_URL = 'sounds/whoosh.mp3';
 
-    // Инициализация AudioContext (только по действию пользователя)
+    // Инициализация AudioContext
     function initContext() {
         if (audioContext) return audioContext;
 
@@ -56,12 +57,10 @@ const SoundEngine = (() => {
         if (!context || !audioBuffer) return;
 
         try {
-            // iOS: если контекст приостановлен, возобновляем
             if (context.state === 'suspended') {
                 context.resume();
             }
 
-            // Воспроизводим звук с нулевой громкостью
             const gainNode = context.createGain();
             gainNode.gain.value = 0;
             gainNode.connect(context.destination);
@@ -71,7 +70,6 @@ const SoundEngine = (() => {
             source.connect(gainNode);
             source.start(0);
             
-            // Останавливаем через 50 мс
             setTimeout(() => {
                 try { 
                     source.stop(0);
@@ -82,14 +80,13 @@ const SoundEngine = (() => {
             isWarmedUp = true;
             console.log('🔊 SoundEngine прогрет');
             
-            // Запускаем "keep-alive" интервал для iOS
             startKeepAlive();
         } catch (error) {
             console.warn('Ошибка прогрева звука', error);
         }
     }
 
-    // Keep-alive: каждые 5 секунд "будим" AudioContext
+    // Keep-alive: каждые 3 секунды "будим" AudioContext
     function startKeepAlive() {
         if (wakeupInterval) return;
         
@@ -104,7 +101,7 @@ const SoundEngine = (() => {
                     console.log('🔊 AudioContext разбужен');
                 }
                 
-                // Создаём "пустой" звук, чтобы держать контекст активным
+                // Создаём тихий звук, чтобы держать контекст активным
                 if (audioBuffer && context.state === 'running') {
                     const gainNode = context.createGain();
                     gainNode.gain.value = 0;
@@ -125,11 +122,17 @@ const SoundEngine = (() => {
             } catch (error) {
                 // Игнорируем ошибки keep-alive
             }
-        }, 5000); // каждые 5 секунд
+        }, 3000); // Каждые 3 секунды (было 5)
     }
 
     // Воспроизведение звука
     function play() {
+        // Очищаем предыдущий таймаут, если был
+        if (playTimeout) {
+            clearTimeout(playTimeout);
+            playTimeout = null;
+        }
+
         try {
             const context = initContext();
             if (!context) {
@@ -137,38 +140,36 @@ const SoundEngine = (() => {
                 return;
             }
 
-            // iOS: если контекст приостановлен, ВСЕГДА возобновляем
+            // iOS: ВСЕГДА пробуждаем контекст
             if (context.state === 'suspended') {
                 context.resume();
-                console.log('🔊 AudioContext возобновлён для воспроизведения');
+                console.log('🔊 AudioContext возобновлён');
             }
 
-            // Если звук ещё не загружен — загружаем
+            // Если звук не загружен — загружаем
             if (!audioBuffer) {
                 loadSound().then(() => {
                     warmUp();
-                    // Пробуем снова через 100 мс
-                    setTimeout(() => play(), 100);
+                    playTimeout = setTimeout(() => play(), 150);
                 });
                 return;
             }
 
-            // Если ещё не прогреты — прогреваем
+            // Если не прогреты — прогреваем
             if (!isWarmedUp) {
                 warmUp();
-                // Пробуем снова через 100 мс
-                setTimeout(() => play(), 100);
+                playTimeout = setTimeout(() => play(), 150);
                 return;
             }
 
-            // iOS: дополнительная проверка — если контекст всё ещё suspended
+            // Ещё раз проверяем контекст
             if (context.state === 'suspended') {
                 context.resume();
-                setTimeout(() => play(), 50);
+                playTimeout = setTimeout(() => play(), 100);
                 return;
             }
 
-            // Создаём источник и воспроизводим
+            // Воспроизводим звук
             const source = context.createBufferSource();
             source.buffer = audioBuffer;
             source.connect(context.destination);
@@ -178,14 +179,19 @@ const SoundEngine = (() => {
 
         } catch (error) {
             console.warn('Ошибка воспроизведения звука', error);
-            // Если ошибка, пробуем переинициализировать
+            
+            // При ошибке переинициализируем
             if (error.name === 'InvalidStateError' || error.name === 'NotAllowedError') {
                 audioContext = null;
                 isWarmedUp = false;
+                if (wakeupInterval) {
+                    clearInterval(wakeupInterval);
+                    wakeupInterval = null;
+                }
                 setTimeout(() => {
                     init();
-                    setTimeout(() => play(), 200);
-                }, 100);
+                    playTimeout = setTimeout(() => play(), 300);
+                }, 150);
             }
         }
     }
@@ -197,25 +203,42 @@ const SoundEngine = (() => {
         const context = initContext();
         if (!context) return;
 
-        // iOS: пробуждаем AudioContext
         if (context.state === 'suspended') {
             context.resume();
         }
 
-        // Загружаем звук
         loadSound().then(() => {
             isInitialized = true;
             console.log('🔊 SoundEngine готов');
-            
-            // Прогреваем звук сразу после загрузки
             warmUp();
         });
     }
 
-    // Публичное API
+    // Остановка keep-alive (для очистки)
+    function destroy() {
+        if (wakeupInterval) {
+            clearInterval(wakeupInterval);
+            wakeupInterval = null;
+        }
+        if (playTimeout) {
+            clearTimeout(playTimeout);
+            playTimeout = null;
+        }
+        if (audioContext && audioContext.state === 'running') {
+            try {
+                audioContext.close();
+            } catch(e) {}
+        }
+        audioContext = null;
+        isWarmedUp = false;
+        isInitialized = false;
+        console.log('🔊 SoundEngine уничтожен');
+    }
+
     return {
         init,
         play,
+        destroy,
         isReady: () => isInitialized && isWarmedUp
     };
 })();
