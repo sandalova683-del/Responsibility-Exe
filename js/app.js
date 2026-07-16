@@ -450,8 +450,7 @@ function showAnswer(){
     updateStats(result);
     updateStreak(result);
 
-    ball.classList.remove('thinking');
-
+    // Сначала меняем изображение и класс одновременно
     if(isVera){
         setBallImage('gold');
     }
@@ -459,6 +458,8 @@ function showAnswer(){
         setBallImage('default');
     }
 
+    // Убираем thinking и добавляем новый класс за один кадр
+    ball.classList.remove('thinking');
     ball.classList.add(visualClass);
 
     answer.textContent = answerText;
@@ -471,7 +472,6 @@ function showAnswer(){
     appData.lastAnswer = result;
     appData.count += 1;
 
-    // Сохраняем историю (максимум 50 записей)
     appData.history.push({
         answer: result,
         timestamp: new Date().toISOString()
@@ -482,7 +482,6 @@ function showAnswer(){
 
     status.textContent = getStatusAfterAnswer(result);
     
-    // ========== ПОКАЗЫВАЕМ СЧЁТЧИК ==========
     counter.classList.remove('hidden');
     counter.dataset.counterTo = appData.count;
     if(window.AppEffects && typeof AppEffects.animateCounter === 'function'){
@@ -490,7 +489,6 @@ function showAnswer(){
     } else {
         counter.textContent = getCounterText();
     }
-    // ========================================
     
     changingCaption.textContent = getRandomCaption();
     footerQuote.textContent = getRandomFooterQuote();
