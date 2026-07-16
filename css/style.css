@@ -314,3 +314,7 @@ footer{width:100%;margin-top:auto;padding-top:10px;padding-bottom:max(14px,env(s
         transform: translateY(0) scale(1);
     }
 }
+
+.changing-caption:empty {
+    display: none;
+}
