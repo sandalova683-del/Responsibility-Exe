@@ -258,6 +258,18 @@ function initializeApp(){
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
     checkFirstLaunch();
+
+    // Инициализация SoundEngine для iOS
+    if (window.SoundEngine) {
+        const initSound = () => {
+            SoundEngine.init();
+            document.removeEventListener('touchstart', initSound);
+            document.removeEventListener('click', initSound);
+            console.log('🔊 SoundEngine инициализирован');
+        };
+        document.addEventListener('touchstart', initSound, { once: true });
+        document.addEventListener('click', initSound, { once: true });
+    }
 }
 
 function checkFirstLaunch(){
@@ -314,7 +326,17 @@ function makeDecision(){
         navigator.vibrate(80);
     }
 
-    playSound();
+    // Вместо playSound();
+    if (window.SoundEngine) {
+        SoundEngine.play();
+    } else {
+        // Fallback на старый способ
+        if (whooshSound && appData.settings.sound) {
+            whooshSound.currentTime = 0;
+            whooshSound.play().catch(() => {});
+        }
+    }
+    
     setBallImage('thinking');
     ball.classList.add('thinking');
 
@@ -535,12 +557,35 @@ function playSound(){
         return;
     }
 
+    // iOS: пробуем "разбудить" аудио
     try{
+        // Если звук не загружен, загружаем
+        if(whooshSound.readyState === 0){
+            whooshSound.load();
+        }
+        
         whooshSound.currentTime = 0;
+        
+        // iOS 15+ fix: нужно явно разрешить звук через пользовательское действие
         const promise = whooshSound.play();
-
+        
         if(promise && typeof promise.catch === 'function'){
-            promise.catch(() => {});
+            promise.catch((error) => {
+                // Если звук заблокирован, пересоздаём аудиоэлемент
+                if(error.name === 'NotAllowedError' || error.name === 'NotSupportedError'){
+                    console.warn('Звук заблокирован, пересоздаём...');
+                    const newSound = document.createElement('audio');
+                    newSound.src = 'sounds/whoosh.mp3';
+                    newSound.preload = 'auto';
+                    whooshSound.parentNode.replaceChild(newSound, whooshSound);
+                    // Обновляем глобальную ссылку
+                    window.whooshSound = newSound;
+                    // Пробуем снова
+                    setTimeout(() => {
+                        newSound.play().catch(() => {});
+                    }, 50);
+                }
+            });
         }
     }
     catch(error){
@@ -574,4 +619,3 @@ function closeDeveloper(){
     developerModal.classList.add("hidden");
     developerInput.blur();
 }
-
