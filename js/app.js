@@ -258,7 +258,7 @@ function initializeApp(){
     // Статус всегда "Готов к делегированию ответственности" при загрузке
     status.textContent = 'Готов к делегированию ответственности.';
     
-    // changing-caption: пустая при первом запуске
+    // changing-caption: пустая при первом запуске (если нет нажатий)
     if (appData.count === 0) {
         changingCaption.textContent = '';
     } else {
@@ -459,7 +459,12 @@ function showAnswer(){
     } else {
         counter.textContent = getCounterText();
     }
-    changingCaption.textContent = getRandomCaption();
+    // changing-caption: пустая при первом запуске (если нет нажатий)
+    if (appData.count === 0) {
+        changingCaption.textContent = '';
+    } else {
+        changingCaption.textContent = getRandomCaption();
+    }
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
 
