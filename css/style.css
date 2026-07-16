@@ -604,3 +604,143 @@ footer{width:100%;margin-top:auto;padding-top:10px;padding-bottom:max(14px,env(s
         font-size: 15px;
     }
 }
+
+/* ======================================
+   Daily Tip Screen
+====================================== */
+
+.tip-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(9, 9, 11, .96);
+    backdrop-filter: blur(14px);
+    z-index: 4500;
+    padding: 20px;
+    animation: tipFadeIn 0.6s ease forwards;
+}
+
+.tip-card {
+    width: min(92%, 400px);
+    background: linear-gradient(180deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 40px 34px 34px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    animation: tipSlideUp 0.5s ease 0.15s forwards;
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+}
+
+.tip-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.daily-tip-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(16px, 4vw, 22px);
+    line-height: 1.7;
+    color: var(--text);
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 0;
+    white-space: pre-wrap;
+}
+
+.tip-divider {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    margin: 20px auto;
+    border-radius: 2px;
+}
+
+.tip-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 24px;
+    letter-spacing: 0.3px;
+}
+
+#close-tip {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, var(--purple), var(--cyan));
+    color: white;
+    font-size: 17px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+    cursor: pointer;
+    transition: transform .2s ease, box-shadow .3s ease;
+    box-shadow: 0 8px 30px rgba(106, 92, 255, .25);
+    letter-spacing: 0.5px;
+}
+
+#close-tip:hover {
+    transform: scale(1.02);
+    box-shadow: 0 12px 40px rgba(106, 92, 255, .4);
+}
+
+#close-tip:active {
+    transform: scale(.97);
+}
+
+@keyframes tipFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes tipSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (max-width: 430px) {
+    .tip-card {
+        padding: 32px 24px 28px;
+    }
+    .daily-tip-text {
+        font-size: 16px;
+        min-height: 60px;
+    }
+    #close-tip {
+        font-size: 15px;
+        padding: 12px;
+    }
+}
+
+@media (max-height: 720px) {
+    .tip-card {
+        padding: 24px 20px 20px;
+    }
+    .daily-tip-text {
+        font-size: 15px;
+        min-height: 50px;
+    }
+    .tip-divider {
+        margin: 14px auto;
+    }
+    .tip-counter {
+        margin-bottom: 16px;
+        font-size: 11px;
+    }
+}
