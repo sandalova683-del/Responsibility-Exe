@@ -248,10 +248,17 @@ function initializeApp(){
     counter.dataset.counterFrom = 0;
     counter.dataset.counterDuration = 1200;
     counter.dataset.counterDecimals = 0;
-    // Запускаем анимацию через AppEffects (если доступен)
-    if(window.AppEffects && typeof AppEffects.animateCounter === 'function'){
-        AppEffects.animateCounter(counter);
+    
+    // Счётчик: показываем только если были нажатия
+    if (appData.count > 0) {
+        counter.classList.remove('hidden');
+        if(window.AppEffects && typeof AppEffects.animateCounter === 'function'){
+            AppEffects.animateCounter(counter);
+        } else {
+            counter.textContent = getCounterText();
+        }
     } else {
+        counter.classList.add('hidden');
         counter.textContent = getCounterText();
     }
     
@@ -452,19 +459,18 @@ function showAnswer(){
     }
 
     status.textContent = getStatusAfterAnswer(result);
-    // Обновляем счётчик с анимацией
+    
+    // ========== ПОКАЗЫВАЕМ СЧЁТЧИК ==========
+    counter.classList.remove('hidden');
     counter.dataset.counterTo = appData.count;
     if(window.AppEffects && typeof AppEffects.animateCounter === 'function'){
         AppEffects.animateCounter(counter);
     } else {
         counter.textContent = getCounterText();
     }
-    // changing-caption: пустая при первом запуске (если нет нажатий)
-    if (appData.count === 0) {
-        changingCaption.textContent = '';
-    } else {
-        changingCaption.textContent = getRandomCaption();
-    }
+    // ========================================
+    
+    changingCaption.textContent = getRandomCaption();
     footerQuote.textContent = getRandomFooterQuote();
     disclaimer.textContent = getRandomDisclaimer();
 
