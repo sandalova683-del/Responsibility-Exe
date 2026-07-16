@@ -1,6 +1,6 @@
 /* =====================================================
    Ответственность.exe - Sound Engine
-   Version: 1.0.0
+   Version: 1.0.1
    © 2026
 ===================================================== */
 
@@ -11,6 +11,7 @@ const SoundEngine = (() => {
     let audioBuffer = null;
     let isInitialized = false;
     let isWarmedUp = false;
+    let wakeupInterval = null;
 
     const SOUND_URL = 'sounds/whoosh.mp3';
 
@@ -80,33 +81,89 @@ const SoundEngine = (() => {
 
             isWarmedUp = true;
             console.log('🔊 SoundEngine прогрет');
+            
+            // Запускаем "keep-alive" интервал для iOS
+            startKeepAlive();
         } catch (error) {
             console.warn('Ошибка прогрева звука', error);
         }
+    }
+
+    // Keep-alive: каждые 5 секунд "будим" AudioContext
+    function startKeepAlive() {
+        if (wakeupInterval) return;
+        
+        wakeupInterval = setInterval(() => {
+            const context = audioContext;
+            if (!context) return;
+            
+            try {
+                // Если контекст уснул — пробуждаем
+                if (context.state === 'suspended') {
+                    context.resume();
+                    console.log('🔊 AudioContext разбужен');
+                }
+                
+                // Создаём "пустой" звук, чтобы держать контекст активным
+                if (audioBuffer && context.state === 'running') {
+                    const gainNode = context.createGain();
+                    gainNode.gain.value = 0;
+                    gainNode.connect(context.destination);
+                    
+                    const source = context.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.connect(gainNode);
+                    source.start(0);
+                    
+                    setTimeout(() => {
+                        try { 
+                            source.stop(0);
+                            gainNode.disconnect();
+                        } catch(e) {}
+                    }, 10);
+                }
+            } catch (error) {
+                // Игнорируем ошибки keep-alive
+            }
+        }, 5000); // каждые 5 секунд
     }
 
     // Воспроизведение звука
     function play() {
         try {
             const context = initContext();
-            if (!context || !audioBuffer) {
-                // Если звук ещё не загружен, загружаем и пробуем снова
-                loadSound().then(() => {
-                    warmUp();
-                    play();
-                });
+            if (!context) {
+                console.warn('Нет AudioContext');
                 return;
             }
 
-            // iOS: если контекст приостановлен, возобновляем
+            // iOS: если контекст приостановлен, ВСЕГДА возобновляем
             if (context.state === 'suspended') {
                 context.resume();
+                console.log('🔊 AudioContext возобновлён для воспроизведения');
+            }
+
+            // Если звук ещё не загружен — загружаем
+            if (!audioBuffer) {
+                loadSound().then(() => {
+                    warmUp();
+                    // Пробуем снова через 100 мс
+                    setTimeout(() => play(), 100);
+                });
+                return;
             }
 
             // Если ещё не прогреты — прогреваем
             if (!isWarmedUp) {
                 warmUp();
-                // Даём время на прогрев
+                // Пробуем снова через 100 мс
+                setTimeout(() => play(), 100);
+                return;
+            }
+
+            // iOS: дополнительная проверка — если контекст всё ещё suspended
+            if (context.state === 'suspended') {
+                context.resume();
                 setTimeout(() => play(), 50);
                 return;
             }
@@ -117,8 +174,19 @@ const SoundEngine = (() => {
             source.connect(context.destination);
             source.start(0);
 
+            console.log('🔊 Звук воспроизведён');
+
         } catch (error) {
             console.warn('Ошибка воспроизведения звука', error);
+            // Если ошибка, пробуем переинициализировать
+            if (error.name === 'InvalidStateError' || error.name === 'NotAllowedError') {
+                audioContext = null;
+                isWarmedUp = false;
+                setTimeout(() => {
+                    init();
+                    setTimeout(() => play(), 200);
+                }, 100);
+            }
         }
     }
 
