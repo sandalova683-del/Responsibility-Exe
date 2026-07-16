@@ -134,7 +134,6 @@ stats
 history
 reset
 cache
-vera
 clear
 exit
 
@@ -195,12 +194,6 @@ Version 1.0
 > `;
                 });
             }
-            break;
-        case "vera":
-            closeDeveloper();
-            answer.textContent = "НАПИШИ ВЕРЕ";
-            answer.className = "answer gold";
-            answer.classList.remove("hidden");
             break;
         case "clear":
             developerOutput.textContent =
