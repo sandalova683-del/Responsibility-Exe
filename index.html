@@ -47,6 +47,45 @@
             <p>Официальная система<br>делегирования ответственности</p>
         </header>
 
+                <!-- Настройки -->
+        <div class="settings-toggle">
+            <button id="settings-button" class="settings-button" type="button" aria-label="Настройки">
+                ⚙️
+            </button>
+        </div>
+
+        <div id="settings-modal" class="modal hidden" aria-modal="true" role="dialog">
+            <div class="modal-card settings-card">
+                <h2>Настройки</h2>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <span class="setting-label">🔊 Звук</span>
+                        <label class="switch">
+                            <input type="checkbox" id="setting-sound" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">📳 Вибрация</span>
+                        <label class="switch">
+                            <input type="checkbox" id="setting-vibration" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <span class="setting-label">🎨 Тема</span>
+                        <div class="theme-selector">
+                            <button class="theme-btn active" data-theme="dark" title="Тёмная">🌙</button>
+                            <button class="theme-btn" data-theme="light" title="Светлая">☀️</button>
+                            <button class="theme-btn" data-theme="cosmic" title="Космическая">🌌</button>
+                            <button class="theme-btn" data-theme="sunset" title="Рассвет">🌅</button>
+                        </div>
+                    </div>
+                </div>
+                <button id="close-settings" type="button">Закрыть</button>
+            </div>
+        </div>
+
         <section class='oracle-container' aria-label='Магический шар'>
             <div id='oracle-ball' class='oracle-ball'>
                 <div class='ball-glow'></div>

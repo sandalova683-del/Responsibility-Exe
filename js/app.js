@@ -29,6 +29,15 @@ const developerModal = document.getElementById('developer-modal');
 const developerOutput = document.getElementById('developer-output');
 const developerInput = document.getElementById('developer-input');
 
+// ========== НОВЫЕ ПЕРЕМЕННЫЕ ДЛЯ НАСТРОЕК ==========
+const settingsButton = document.getElementById('settings-button');
+const settingsModal = document.getElementById('settings-modal');
+const closeSettingsButton = document.getElementById('close-settings');
+const settingSound = document.getElementById('setting-sound');
+const settingVibration = document.getElementById('setting-vibration');
+const themeButtons = document.querySelectorAll('.theme-btn');
+// =====================================================
+
 let appData = loadData();
 let isThinking = false;
 
@@ -243,6 +252,12 @@ function setBallImage(type = 'default'){
 
 function initializeApp(){
     setBallImage();
+    
+    // ========== ЗАГРУЖАЕМ НАСТРОЙКИ ==========
+    settingSound.checked = appData.settings.sound !== false;
+    settingVibration.checked = appData.settings.vibration !== false;
+    // =========================================
+    
     // Устанавливаем data-атрибуты для анимации
     counter.dataset.counterTo = appData.count;
     counter.dataset.counterFrom = 0;
@@ -640,3 +655,57 @@ function closeDeveloper(){
     developerModal.classList.add("hidden");
     developerInput.blur();
 }
+
+// ============================================
+// Settings
+// ============================================
+
+// Открыть настройки
+settingsButton.addEventListener('click', () => {
+    settingsModal.classList.remove('hidden');
+});
+
+// Закрыть настройки
+closeSettingsButton.addEventListener('click', () => {
+    settingsModal.classList.add('hidden');
+});
+
+// Закрыть по клику вне окна
+settingsModal.addEventListener('click', event => {
+    if (event.target === settingsModal) {
+        settingsModal.classList.add('hidden');
+    }
+});
+
+// Сохранение настроек
+settingSound.addEventListener('change', () => {
+    appData.settings.sound = settingSound.checked;
+    saveData(appData);
+});
+
+settingVibration.addEventListener('change', () => {
+    appData.settings.vibration = settingVibration.checked;
+    saveData(appData);
+});
+
+// Тема
+themeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        themeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const theme = btn.dataset.theme;
+        document.documentElement.dataset.theme = theme;
+        try {
+            localStorage.setItem('app-theme', theme);
+        } catch(e) {}
+    });
+});
+
+// Загрузка сохранённой темы
+try {
+    const savedTheme = localStorage.getItem('app-theme') || 'dark';
+    themeButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.theme === savedTheme);
+    });
+    document.documentElement.dataset.theme = savedTheme;
+} catch(e) {}
