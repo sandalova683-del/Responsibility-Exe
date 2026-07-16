@@ -174,7 +174,19 @@ header p{margin-top:10px;color:var(--muted);font-size:15px;line-height:1.55;}
 footer{width:100%;margin-top:auto;padding-top:10px;padding-bottom:max(14px,env(safe-area-inset-bottom));text-align:center;}
 .footer-quote{margin-bottom:12px;color:#B9B9C6;font-size:13px;line-height:1.55;font-style:italic;}
 .copyright{font-size:10px;color:#666670;line-height:1.6;}
-.disclaimer{margin-top:8px;font-size:10px;color:#5C5C65;line-height:1.6;}
+.disclaimer{
+    margin-top: 8px;
+    margin-bottom: 6px;
+    font-size: 10px;
+    color: #5C5C65;
+    line-height: 1.6;
+}
+
+/* Акцент на ⚠ */
+.disclaimer:first-child {
+    font-weight: 500;
+    color: #8F8FA3;
+}
 .about-button{margin-top:18px;border:none;background:none;color:#8F8FA3;font-size:12px;cursor:pointer;transition:.25s;}
 .about-button:hover{color:white;}
 .about-button:active{transform:scale(.95);}
