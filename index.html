@@ -7,20 +7,21 @@
     <meta name='theme-color' content='#09090B'>
     <meta name='color-scheme' content='dark'>
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Ответственность.exe">
     <meta name='description' content='Официальная система делегирования ответственности'>
     <link rel='manifest' href="manifest.json">
     <link rel='icon' href='assets/icons/favicon.png'>
     <link rel='apple-touch-icon' href='assets/icons/icon-192.png'>
-<!--
-    <link rel='preconnect' href='https://fonts.googleapis.com'>
-    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin>
-    <link href='https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap' rel='stylesheet'>
--->
     <link rel='stylesheet' href='css/style.css'>
 </head>
 <body>
+    <!-- Preload gold ball image -->
+    <div style="display:none;">
+        <img src="assets/ball-gold.png" alt="">
+    </div>
+
     <div id='loader' class='loader-screen'>
         <div class='loader-content'>
             <div class='loader-logo'>Ответственность.exe</div>
@@ -41,7 +42,7 @@
         </div>
     </div>
 
-        <!-- Daily Tip Screen -->
+    <!-- Daily Tip Screen -->
     <div id="tip-screen" class="tip-screen hidden" aria-modal="true" role="dialog">
         <div class="tip-card">
             <div class="tip-label">💡 СОВЕТ ДНЯ</div>
@@ -57,7 +58,7 @@
             <p>Официальная система<br>делегирования ответственности</p>
         </header>
 
-                <!-- Настройки -->
+        <!-- Настройки -->
         <div class="settings-toggle">
             <button id="settings-button" class="settings-button" type="button" aria-label="Настройки">
                 ⚙️
@@ -133,29 +134,29 @@
         </div>
     </div>
 
-<div id="developer-modal" class="developer-modal hidden">
-    <div class="developer-window">
-        <div class="developer-header">
-            ⚡ Console v1.0
-        </div>
-        <div id="developer-output" class="developer-output">
+    <div id="developer-modal" class="developer-modal hidden">
+        <div class="developer-window">
+            <div class="developer-header">
+                ⚡ Console v1.0
+            </div>
+            <div id="developer-output" class="developer-output">
 Введите команду или наберите "help"
 
 >
+            </div>
+            <input
+                id="developer-input"
+                class="developer-input"
+                type="text"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="off"
+                spellcheck="false"
+            >
         </div>
-        <input
-            id="developer-input"
-            class="developer-input"
-            type="text"
-            autocomplete="off"
-            autocorrect="off"
-            autocapitalize="off"
-            spellcheck="false"
-        >
     </div>
-</div>
 
-    <audio id='whoosh-sound' preload='none'>
+    <audio id='whoosh-sound' preload='auto'>
         <source src='sounds/whoosh.mp3' type='audio/mpeg'>
     </audio>
 

@@ -243,7 +243,6 @@ function setBallImage(type = 'default'){
     if(!ballImage){
         return;
     }
-
     ballImage.src = BALL_IMAGES[type] || BALL_IMAGES.default;
 }
 
@@ -351,7 +350,7 @@ function makeDecision(){
     answer.textContent = '';
     resultCaption.className = 'result-caption hidden';
     resultCaption.textContent = '';
-    ball.classList.remove('yes','no','gold','flash');
+    ball.classList.remove('yes','no','gold','flash','surprised','tricky','pulse','thinking');
     setBallImage('default');
 
     if(appData.settings.vibration && 'vibrate' in navigator){
@@ -443,17 +442,18 @@ function showAnswer(){
     updateStats(result);
     updateStreak(result);
 
-    // Сначала меняем изображение и класс одновременно
-    if(isVera){
-        setBallImage('gold');
+    // ========== МГНОВЕННАЯ СМЕНА ШАРА ==========
+    ball.classList.remove('thinking', 'yes', 'no', 'gold', 'flash', 'surprised', 'tricky', 'pulse');
+    
+    if (isVera) {
+        ballImage.src = BALL_IMAGES.gold;
+        ballImage.style.display = 'block';
+        ball.classList.add('gold');
+    } else {
+        ballImage.src = BALL_IMAGES.default;
+        ball.classList.add(visualClass);
     }
-    else{
-        setBallImage('default');
-    }
-
-    // Убираем thinking и добавляем новый класс за один кадр
-    ball.classList.remove('thinking');
-    ball.classList.add(visualClass);
+    // ==========================================
 
     answer.textContent = answerText;
     answer.className = `answer ${visualClass}`;
@@ -593,28 +593,23 @@ function playSound(){
 
     // iOS: пробуем "разбудить" аудио
     try{
-        // Если звук не загружен, загружаем
         if(whooshSound.readyState === 0){
             whooshSound.load();
         }
         
         whooshSound.currentTime = 0;
         
-        // iOS 15+ fix: нужно явно разрешить звук через пользовательское действие
         const promise = whooshSound.play();
         
         if(promise && typeof promise.catch === 'function'){
             promise.catch((error) => {
-                // Если звук заблокирован, пересоздаём аудиоэлемент
                 if(error.name === 'NotAllowedError' || error.name === 'NotSupportedError'){
                     console.warn('Звук заблокирован, пересоздаём...');
                     const newSound = document.createElement('audio');
                     newSound.src = 'sounds/whoosh.mp3';
                     newSound.preload = 'auto';
                     whooshSound.parentNode.replaceChild(newSound, whooshSound);
-                    // Обновляем глобальную ссылку
                     window.whooshSound = newSound;
-                    // Пробуем снова
                     setTimeout(() => {
                         newSound.play().catch(() => {});
                     }, 50);
